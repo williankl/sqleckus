@@ -1,0 +1,11 @@
+rootProject.name = 'SQLeckus'
+include 'domain'
+include 'sql'
+
+buildscript {
+    repositories { mavenCentral() }
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-serialization:1.4.30"
+    }
+}
+
