@@ -1,5 +1,6 @@
 package internal.services
 
+import errors.SQLecusException
 import internal.use_cases.query.InnerJoinUseCase
 import internal.use_cases.query.SelectUseCase
 import kotlinx.serialization.decodeFromString
@@ -8,7 +9,6 @@ import models.Column
 import models.SqlQuery
 import models.SqlType
 import models.Table
-import sun.plugin.dom.exception.InvalidStateException
 import java.sql.Connection
 import java.sql.ResultSet
 
@@ -58,7 +58,7 @@ internal object QueryService {
                 is String,
                 is Int,
                 is Boolean -> "\"$key\":\"$value\""
-                else -> throw InvalidStateException("Could not parse '$value' to a valid type")
+                else -> throw SQLecusException.CouldNotParseTypeException
             }
         }.let { "{$it}" }
 

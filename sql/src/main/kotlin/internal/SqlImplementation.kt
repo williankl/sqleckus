@@ -1,5 +1,6 @@
 package internal
 
+import errors.SQLecusException
 import internal.services.CallService
 import internal.services.QueryService
 import models.DatabaseType
@@ -7,7 +8,6 @@ import models.SqlCall
 import models.SqlQuery
 import models.Table
 import services.SqlConnection
-import java.lang.IllegalStateException
 import java.sql.Connection
 import java.sql.DriverManager
 import kotlin.reflect.KClass
@@ -40,12 +40,12 @@ internal class SqlImplementation: SqlConnection {
     override fun query(query: SqlQuery, onTable: Table, klass: KClass<*>): List<KClass<*>> =
         connection?.let { conn ->
             QueryService.handleQuery(conn,query, onTable)
-        } ?: throw IllegalStateException("Establish a connection to the database before making a call/query")
+        } ?: throw SQLecusException.NoDatabaseConnection
 
 
 
     override fun call(call: SqlCall) =
         connection?.let { conn ->
             CallService.handleCall(conn,call)
-        } ?: throw IllegalStateException("Establish a connection to the database before making a call/query")
+        } ?: throw SQLecusException.NoDatabaseConnection
 }
