@@ -1,5 +1,3 @@
-package internal
-
 import errors.SQLecusException
 import internal.services.CallService
 import internal.services.QueryService
@@ -7,23 +5,23 @@ import models.DatabaseType
 import models.SqlCall
 import models.SqlQuery
 import models.Table
-import services.SqlConnection
 import java.sql.Connection
 import java.sql.DriverManager
-import kotlin.reflect.KClass
 
-internal class SqlImplementation: SqlConnection {
+class SQLeckus {
 
     private var connection: Connection? = null
+
+    fun retrieveConnection() = connection
 
     private fun buildUrl(databaseType: DatabaseType, host: String, port: String, db: String, usr: String, pwd: String) =
         "jdbc:${databaseType.key}://$host:$port/$db?user=$usr&password=$pwd"
 
-    override fun startConnection(url: String) {
+    fun startConnection(url: String) {
         if (connection == null) connection = DriverManager.getConnection(url)
     }
 
-    override fun startConnection(
+    fun startConnection(
         databaseType: DatabaseType,
         host: String,
         port: String,
@@ -37,14 +35,14 @@ internal class SqlImplementation: SqlConnection {
             )
     }
 
-    override fun query(query: SqlQuery, onTable: Table, klass: KClass<*>): List<KClass<*>> =
-        connection?.let { conn ->
+    inline fun <reified T> query(query: SqlQuery, onTable: Table): List<T> =
+        retrieveConnection()?.let { conn ->
             QueryService.handleQuery(conn,query, onTable)
         } ?: throw SQLecusException.NoDatabaseConnection
 
 
 
-    override fun call(call: SqlCall) =
+    fun call(call: SqlCall) =
         connection?.let { conn ->
             CallService.handleCall(conn,call)
         } ?: throw SQLecusException.NoDatabaseConnection

@@ -1,12 +1,12 @@
 package internal.use_cases.query
 
-import models.SqlOperator
 import models.SqlQuery
 import java.lang.IllegalArgumentException
 import java.sql.Connection
 import java.sql.ResultSet
 
-object InnerJoinUseCase {
+@PublishedApi
+internal object InnerJoinUseCase {
     operator fun invoke(connection: Connection, query: SqlQuery.InnerJoin): ResultSet{
         if(query.statements.size <= 1)
             throw IllegalArgumentException("InnerJoin statement list must have at least 2 statements")

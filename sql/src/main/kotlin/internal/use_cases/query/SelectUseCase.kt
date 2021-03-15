@@ -4,6 +4,7 @@ import models.SqlQuery
 import java.sql.Connection
 import java.sql.ResultSet
 
+@PublishedApi
 internal object SelectUseCase {
     operator fun invoke(connection: Connection, query: SqlQuery.Selection): ResultSet{
         val selectStatement = "SELECT * FROM ${query.schema.name}.${query.table.name} table"

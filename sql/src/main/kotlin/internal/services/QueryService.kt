@@ -12,6 +12,7 @@ import models.Table
 import java.sql.Connection
 import java.sql.ResultSet
 
+@PublishedApi
 internal object QueryService {
     inline fun <reified T> handleQuery(connection: Connection, sqlQuery: SqlQuery, onTable: Table): List<T> =
         when(sqlQuery){
@@ -20,7 +21,8 @@ internal object QueryService {
         }
 
 
-    private inline fun <reified T> transformQuery(resultSet: ResultSet, table: Table): List<T> =
+    @PublishedApi
+    internal inline fun <reified T> transformQuery(resultSet: ResultSet, table: Table): List<T> =
         resultSet.apply { next() }
             .let { set ->
                 if (set.isAfterLast) return@let listOf<T>()
@@ -40,7 +42,7 @@ internal object QueryService {
             }
 
 
-    private fun Column.keyValuePair(set: ResultSet) =
+    fun Column.keyValuePair(set: ResultSet) =
         when(type){
             is SqlType.VarChar,
             is SqlType.LongText,
@@ -52,7 +54,7 @@ internal object QueryService {
             is SqlType.Binary -> Pair(this.name, set.getBoolean(this.name))
         }
 
-    private fun List<Pair<String, Any>>.toJsonString() =
+    fun List<Pair<String, Any>>.toJsonString() =
         joinToString(separator = ","){ (key, value) ->
             when(value){
                 is String,
