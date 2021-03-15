@@ -14,6 +14,6 @@ Add this to the dependencies on the module you want to use it:
 
 ```
 dependencies{
-  implementation 'com.github.WillianKleckus:sqleckus:$current_version'
+  implementation 'com.github.WillianKleckus.sqleckus:sql:$current_version'
 } 
 ```
