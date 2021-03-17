@@ -1,11 +1,10 @@
 package models
 
+
 sealed class SqlQuery{
     data class JoinStatement(
-        val by1: Column,
-        val by2: Column,
-        val t1: Table,
-        val t2: Table
+        val by1: Pair<Column, Table>,
+        val by2: Pair<Column, Table>
         )
 
     data class ConditionStatement(
@@ -25,8 +24,8 @@ sealed class SqlQuery{
     data class InnerJoin(
         val schema: Schema,
         val baseTable: Table,
-        val statements: List<JoinStatement>,
         val baseCondition: ConditionStatement,
+        val statements: List<JoinStatement>,
         val conditionsWithLogic: List<SqlOperator.Logic>
         ): SqlQuery()
 }

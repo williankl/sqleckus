@@ -3,7 +3,7 @@ plugins {
 }
 
 group 'com.kleckus'
-version '0.1'
+version "$app_version"
 
 repositories {
     mavenCentral()

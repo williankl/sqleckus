@@ -17,9 +17,9 @@ internal object InnerJoinUseCase {
         val innerJoins =
             query.statements.joinToString(separator = " ") { statement ->
                 val innerJoinStatement =
-                    "INNER JOIN ${query.schema.name}.${statement.t1.name} ${statement.t1.name}"
+                    "INNER JOIN ${query.schema.name}.${statement.by1.first.name} ${statement.by1.first.name}"
                 val onStatement =
-                    "ON ${statement.t1.name}.${statement.by1.name} = ${statement.t2.name}.${statement.by2.name}"
+                    "ON ${statement.by1.first.name}.${statement.by1.second.name} = ${statement.by2.first.name}.${statement.by2.second.name}"
                 "$innerJoinStatement $onStatement"
             }
 

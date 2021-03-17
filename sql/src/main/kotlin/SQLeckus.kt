@@ -14,9 +14,6 @@ class SQLeckus {
 
     fun retrieveConnection() = connection
 
-    private fun buildUrl(databaseType: DatabaseType, host: String, port: String, db: String, usr: String, pwd: String) =
-        "jdbc:${databaseType.key}://$host:$port/$db?user=$usr&password=$pwd"
-
     fun startConnection(url: String) {
         if (connection == null) connection = DriverManager.getConnection(url)
     }
@@ -46,4 +43,7 @@ class SQLeckus {
         connection?.let { conn ->
             CallService.handleCall(conn,call)
         } ?: throw SQLecusException.NoDatabaseConnection
+
+    private fun buildUrl(databaseType: DatabaseType, host: String, port: String, db: String, usr: String, pwd: String) =
+        "jdbc:${databaseType.key}://$host:$port/$db?user=$usr&password=$pwd"
 }
