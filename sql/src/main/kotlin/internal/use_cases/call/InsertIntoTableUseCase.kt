@@ -36,9 +36,6 @@ internal object InsertIntoTableUseCase {
 
         val sql = "$insertStatement ($columns) $valuesStatement ($values);"
 
-        connection
-            .prepareCall(sql)
-            .execute()
-            .also { println(sql) }
+        println(sql).let { connection.prepareCall(sql).execute() }
     }
 }

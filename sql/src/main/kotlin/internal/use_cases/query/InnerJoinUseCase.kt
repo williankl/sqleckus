@@ -7,8 +7,8 @@ import java.sql.ResultSet
 
 @PublishedApi
 internal object InnerJoinUseCase {
-    operator fun invoke(connection: Connection, query: SqlQuery.InnerJoin): ResultSet{
-        if(query.statements.size <= 1)
+    operator fun invoke(connection: Connection, query: SqlQuery.InnerJoin): ResultSet {
+        if (query.statements.size <= 1)
             throw IllegalArgumentException("InnerJoin statement list must have at least 2 statements")
 
         val selectClause = "SELECT * FROM"
@@ -27,15 +27,12 @@ internal object InnerJoinUseCase {
             "WHERE ${query.baseCondition.table.name}.${query.baseCondition.column.name} ${query.baseCondition.operator.sql} ${query.baseCondition.value}"
 
         val logicClauses =
-            query.conditionsWithLogic.joinToString(separator = " "){ operator ->
-               "${operator.sql} ${operator.condition.table.name}.${operator.condition.column.name} ${operator.condition.operator.sql} ${operator.condition.value}"
+            query.conditionsWithLogic.joinToString(separator = " ") { operator ->
+                "${operator.sql} ${operator.condition.table.name}.${operator.condition.column.name} ${operator.condition.operator.sql} ${operator.condition.value}"
             }
 
         val sql = "$selectClause $baseTable $innerJoins $whereClause $logicClauses;"
 
-        return connection
-            .createStatement()
-            .executeQuery(sql)
-            .also { println(sql) }
+        return println(sql).let { connection.createStatement().executeQuery(sql) }
     }
 }

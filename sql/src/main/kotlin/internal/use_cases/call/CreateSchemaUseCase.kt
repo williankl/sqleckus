@@ -5,10 +5,7 @@ import java.sql.Connection
 
 object CreateSchemaUseCase {
     operator fun invoke(connection: Connection, call: SqlCall.CreateSchema){
-        val sql = "CREATE SCHEMA ${call.schema.name};"
-        connection
-            .prepareCall(sql)
-            .execute()
-            .also { println(sql) }
+        val sql = "CREATE SCHEMA IF NOT EXISTS ${call.schema.name};"
+        println(sql).let { connection.prepareCall(sql).execute() }
     }
 }

@@ -12,9 +12,6 @@ internal object SelectUseCase {
 
         val sql = "$selectStatement $whereStatement;"
 
-        return connection
-            .createStatement()
-            .executeQuery(sql)
-            .also { println(sql) }
+        return println(sql).let { connection.createStatement().executeQuery(sql) }
     }
 }
