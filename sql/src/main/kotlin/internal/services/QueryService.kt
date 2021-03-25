@@ -57,9 +57,9 @@ internal object QueryService {
     fun List<Pair<String, Any>>.toJsonString() =
         joinToString(separator = ","){ (key, value) ->
             when(value){
-                is String,
+                is String -> "\"$key\":\"$value\""
                 is Int,
-                is Boolean -> "\"$key\":\"$value\""
+                is Boolean -> "\"$key\":$value"
                 else -> throw SQLecusException.CouldNotParseTypeException
             }
         }.let { "{$it}" }

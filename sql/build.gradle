@@ -8,12 +8,18 @@ version "$app_version"
 
 repositories {
     mavenCentral()
+    maven { url  "https://dl.bintray.com/christophsturm/maven" }
 }
 
 dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.1.0")
     implementation("org.kodein.di:kodein-di:7.1.0")
+
+
+    testImplementation("io.mockk:mockk:1.10.6")
+    testImplementation("io.strikt:strikt-core:0.29.0")
+    testImplementation("junit:junit:4.13.1")
 
     implementation(project(":domain"))
 }
