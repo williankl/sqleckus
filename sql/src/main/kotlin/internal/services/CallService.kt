@@ -9,7 +9,7 @@ import java.sql.Connection
 @PublishedApi
 internal object CallService {
     fun handleCall(connection: Connection, call: SqlCall) {
-        when(call){
+        when (call) {
             is SqlCall.CreateSchema -> CreateSchemaUseCase(connection, call)
             is SqlCall.DropSchema -> TODO()
             is SqlCall.CreateTable -> CreateTableUseCase(connection, call)
@@ -20,7 +20,7 @@ internal object CallService {
         }
     }
 
-    private fun Connection.insertItem(call: SqlCall.InsertItem<Any>){
+    private fun Connection.insertItem(call: SqlCall.InsertItem<Any>) {
         InsertIntoTableUseCase(this, call)
     }
 }

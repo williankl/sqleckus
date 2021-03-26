@@ -1,5 +1,3 @@
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
 import models.*
 import org.junit.Before
 import org.junit.Test
@@ -16,7 +14,7 @@ class CallTests {
         val text: String
     )
 
-    private val klazz =
+    private val klass =
         TestClass(
             integer = 5,
             text = "text"
@@ -24,13 +22,13 @@ class CallTests {
 
     private val testColumnOne =
         Column(
-            name ="integer",
+            name = "integer",
             type = SqlType.BigInt
         )
 
     private val testColumnTwo =
         Column(
-            name ="text",
+            name = "text",
             type = SqlType.VarChar(50)
         )
 
@@ -55,14 +53,14 @@ class CallTests {
     private val schema = Schema(name = "testSchema")
 
     @Before
-    fun `before tests`(){
+    fun `before tests`() {
         sql = SQLeckus()
         sql?.startConnection(localUrl)
         sql?.call(SqlCall.CreateSchema(schema))
     }
 
     @Test
-    fun `should correctly insert an table to the database`(){
+    fun `should correctly insert an table to the database`() {
         sql?.call(
             SqlCall.CreateTable(schema, table)
         )
@@ -71,7 +69,7 @@ class CallTests {
             SqlCall.InsertItem(
                 schema = schema,
                 table = table,
-                item = klazz
+                item = klass
             )
         )
     }

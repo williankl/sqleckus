@@ -34,10 +34,8 @@ class SQLeckus {
 
     inline fun <reified T> query(query: SqlQuery, onTable: Table): List<T> =
         retrieveConnection()?.let { conn ->
-            QueryService.handleQuery(conn,query, onTable)
+            QueryService.handleQuery(conn, query, onTable)
         } ?: throw SQLecusException.NoDatabaseConnection
-
-
 
     fun call(call: SqlCall) =
         retrieveConnection()?.let { conn ->

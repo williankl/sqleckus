@@ -21,17 +21,17 @@ class ConnectionTest {
         "jdbc:postgresql://localhost:5432/test_db?user=postgres&password=1996"
 
     @Before
-    fun `before tests`(){
+    fun `before tests`() {
         sql = SQLeckus()
     }
 
     @Test
-    fun `should connect to local db`(){
+    fun `should connect to local db`() {
         expectThat(sql?.startConnection(localUrl)) isEqualTo Unit
     }
 
     @Test
-    fun `should make query if connected to a db`(){
+    fun `should make query if connected to a db`() {
         sql?.startConnection(localUrl)
         expectThat(
             sql?.call(SqlCall.CreateSchema(Schema("name")))
@@ -39,18 +39,18 @@ class ConnectionTest {
     }
 
     @Test
-    fun `should throw error when bad driver url is passed`(){
-        expectThrows<SQLException>{ sql?.startConnection(badDriverUrl) }
+    fun `should throw error when bad driver url is passed`() {
+        expectThrows<SQLException> { sql?.startConnection(badDriverUrl) }
     }
 
     @Test
-    fun `should throw error when bad address url is passed`(){
-        expectThrows<SQLException>{ sql?.startConnection(badAddressUrl) }
+    fun `should throw error when bad address url is passed`() {
+        expectThrows<SQLException> { sql?.startConnection(badAddressUrl) }
     }
 
     @Test
-    fun `should throw if no connection is made before attempting a call or query`(){
-        expectThrows<SQLException>{
+    fun `should throw if no connection is made before attempting a call or query`() {
+        expectThrows<SQLException> {
             sql?.call(SqlCall.CreateSchema(Schema("name")))
         }
     }
