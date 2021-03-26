@@ -40,8 +40,8 @@ class SQLeckus {
 
 
     fun call(call: SqlCall) =
-        connection?.let { conn ->
-            CallService.handleCall(conn,call)
+        retrieveConnection()?.let { conn ->
+            CallService.handleCall(conn, call)
         } ?: throw SQLecusException.NoDatabaseConnection
 
     private fun buildUrl(databaseType: DatabaseType, host: String, port: String, db: String, usr: String, pwd: String) =

@@ -45,7 +45,6 @@ internal object QueryService {
     fun Column.keyValuePair(set: ResultSet) =
         when(type){
             is SqlType.VarChar,
-            is SqlType.LongText,
             is SqlType.Date -> Pair(this.name, set.getString(this.name))
 
             is SqlType.Integer,

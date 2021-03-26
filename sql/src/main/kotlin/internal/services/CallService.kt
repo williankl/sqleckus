@@ -6,6 +6,7 @@ import internal.use_cases.call.InsertIntoTableUseCase
 import models.SqlCall
 import java.sql.Connection
 
+@PublishedApi
 internal object CallService {
     fun handleCall(connection: Connection, call: SqlCall) {
         when(call){
@@ -13,9 +14,13 @@ internal object CallService {
             is SqlCall.DropSchema -> TODO()
             is SqlCall.CreateTable -> CreateTableUseCase(connection, call)
             is SqlCall.DropTable -> TODO()
-            is SqlCall.InsertItem<*> -> InsertIntoTableUseCase(connection, call)
+            is SqlCall.InsertItem<*> -> connection.insertItem(call as SqlCall.InsertItem<Any>)
             is SqlCall.DeleteItem<*> -> TODO()
             is SqlCall.UpdateItem<*> -> TODO()
         }
+    }
+
+    private fun Connection.insertItem(call: SqlCall.InsertItem<Any>){
+        InsertIntoTableUseCase(this, call)
     }
 }

@@ -15,6 +15,7 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.1.0")
     implementation("org.kodein.di:kodein-di:7.1.0")
+    implementation("org.jetbrains.kotlin:kotlin-reflect:1.4.30")
 
     implementation(project(":domain"))
 }

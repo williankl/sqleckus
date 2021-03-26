@@ -1,9 +1,10 @@
-import models.*
+import kotlin.reflect.KClass
+import kotlin.reflect.KProperty
 
-fun Schema.create(sql: SQLeckus){
-    sql.call(SqlCall.CreateSchema(this))
-}
+internal fun KClass<out Any>.retrieveCallableNames() =
+    this.members.map { callable -> callable.name }
 
-fun Schema.addTable(sql: SQLeckus, table: Table){
-    sql.call(SqlCall.CreateTable(this, table))
-}
+internal fun KClass<out Any>.retrieveCallableKeyValuePair(): List<Pair<String, String>> =
+    this.members.map { callable ->
+        Pair(callable.name, callable.call(this).toString() )
+    }
