@@ -17,3 +17,5 @@ dependencies{
   implementation 'com.github.WillianKleckus.sqleckus:sql:$current_version'
 } 
 ```
+
+# STILL IN PROGRESS - NOT PUBLIC YET
