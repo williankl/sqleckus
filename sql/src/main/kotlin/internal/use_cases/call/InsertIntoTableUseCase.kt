@@ -6,8 +6,6 @@ import retrieveCallableKeyValuePair
 import java.sql.Connection
 
 internal object InsertIntoTableUseCase {
-
-    @OptIn(ExperimentalStdlibApi::class)
     operator fun invoke(connection: Connection, call: SqlCall.InsertItem<Any>) {
         val insertStatement = "INSERT INTO ${call.schema.name}.${call.table.name}"
 
@@ -38,7 +36,6 @@ internal object InsertIntoTableUseCase {
             }
 
         val sql = "$insertStatement ($columns) $valuesStatement ($values);"
-
         println(sql).let { connection.prepareCall(sql).execute() }
     }
 }

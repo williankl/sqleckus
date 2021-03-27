@@ -18,6 +18,12 @@ class SQLeckus {
         if (connection == null) connection = DriverManager.getConnection(url)
     }
 
+    fun closeConnection(){
+        connection
+            ?.let { it.close() }
+            ?.also { connection = null }
+    }
+
     fun startConnection(
         databaseType: DatabaseType,
         host: String,

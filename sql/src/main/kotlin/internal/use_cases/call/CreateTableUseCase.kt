@@ -14,7 +14,6 @@ internal object CreateTableUseCase {
                 }
 
         val sql = "$createStatement($columnsStatement);"
-
         println(sql).let { connection.prepareCall(sql).execute() }
     }
 }
