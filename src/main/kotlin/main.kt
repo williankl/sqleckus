@@ -1,5 +1,5 @@
 
 
-fun main(){
+fun main() {
     val sql = SQLeckus()
 }

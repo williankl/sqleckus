@@ -18,6 +18,12 @@ class SQLeckus {
         if (connection == null) connection = DriverManager.getConnection(url)
     }
 
+    fun closeConnection(){
+        connection
+            ?.let { it.close() }
+            ?.also { connection = null }
+    }
+
     fun startConnection(
         databaseType: DatabaseType,
         host: String,
@@ -34,14 +40,12 @@ class SQLeckus {
 
     inline fun <reified T> query(query: SqlQuery, onTable: Table): List<T> =
         retrieveConnection()?.let { conn ->
-            QueryService.handleQuery(conn,query, onTable)
+            QueryService.handleQuery(conn, query, onTable)
         } ?: throw SQLecusException.NoDatabaseConnection
 
-
-
     fun call(call: SqlCall) =
-        connection?.let { conn ->
-            CallService.handleCall(conn,call)
+        retrieveConnection()?.let { conn ->
+            CallService.handleCall(conn, call)
         } ?: throw SQLecusException.NoDatabaseConnection
 
     private fun buildUrl(databaseType: DatabaseType, host: String, port: String, db: String, usr: String, pwd: String) =

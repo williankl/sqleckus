@@ -1,41 +1,41 @@
 package internal.use_cases.call
 
 import errors.SQLecusException
-import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.encodeToJsonElement
-import kotlinx.serialization.json.jsonObject
 import models.SqlCall
+import retrieveCallableKeyValuePair
 import java.sql.Connection
 
 internal object InsertIntoTableUseCase {
-    operator fun invoke(connection: Connection, call: SqlCall){
-        if(call is SqlCall.InsertItem<*>) { /* Nothing */ }
-        else throw SQLecusException.InvalidAction
-
-        val json = Json.encodeToJsonElement(call.item)
-
+    operator fun invoke(connection: Connection, call: SqlCall.InsertItem<Any>) {
         val insertStatement = "INSERT INTO ${call.schema.name}.${call.table.name}"
 
         val columns =
-            json.jsonObject.entries.joinToString(separator = " , ") { map ->
-                call.table.columns
-                    .firstOrNull { column -> column.name == map.key }
-                    ?.name
-                    ?: throw SQLecusException.CouldNotFindSqlFieldOnTable(map.key, call.schema.name, call.table.name)
+            call.table.columns.joinToString(separator = ", ") { column ->
+                call.item.retrieveCallableKeyValuePair()
+                    .firstOrNull { it?.first == column.name }
+                    ?.let { it.first }
+                    ?: throw SQLecusException.CouldNotFindSqlFieldOnTable(
+                        column.name,
+                        call.schema.name,
+                        call.table.name
+                    )
             }
 
         val valuesStatement = "VALUES"
 
         val values =
-            json.jsonObject.entries.joinToString(separator = " , ") { map ->
-                call.table.columns
-                    .firstOrNull { column -> column.name == map.key }
-                    ?.let { "'${it.type.code}'" }
-                    ?: throw SQLecusException.CouldNotFindSqlFieldOnTable(map.key, call.schema.name, call.table.name)
+            call.table.columns.joinToString(separator = ", ") { column ->
+                call.item.retrieveCallableKeyValuePair()
+                    .firstOrNull { it?.first == column.name }
+                    ?.let { "'${it.second}'" }
+                    ?: throw SQLecusException.CouldNotFindSqlFieldOnTable(
+                        column.name,
+                        call.schema.name,
+                        call.table.name
+                    )
             }
 
         val sql = "$insertStatement ($columns) $valuesStatement ($values);"
-
         println(sql).let { connection.prepareCall(sql).execute() }
     }
 }

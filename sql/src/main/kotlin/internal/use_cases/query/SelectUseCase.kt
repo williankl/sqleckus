@@ -6,7 +6,7 @@ import java.sql.ResultSet
 
 @PublishedApi
 internal object SelectUseCase {
-    operator fun invoke(connection: Connection, query: SqlQuery.Selection): ResultSet{
+    operator fun invoke(connection: Connection, query: SqlQuery.Selection): ResultSet {
         val selectStatement = "SELECT * FROM ${query.schema.name}.${query.table.name} ${query.table.name}"
         val whereStatement = "WHERE ${query.table.name}.${query.by.name} = ${query.by.name}"
 

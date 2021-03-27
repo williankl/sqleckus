@@ -15,11 +15,10 @@ import java.sql.ResultSet
 @PublishedApi
 internal object QueryService {
     inline fun <reified T> handleQuery(connection: Connection, sqlQuery: SqlQuery, onTable: Table): List<T> =
-        when(sqlQuery){
+        when (sqlQuery) {
             is SqlQuery.Selection -> transformQuery(SelectUseCase(connection, sqlQuery), onTable)
             is SqlQuery.InnerJoin -> transformQuery(InnerJoinUseCase(connection, sqlQuery), onTable)
         }
-
 
     @PublishedApi
     internal inline fun <reified T> transformQuery(resultSet: ResultSet, table: Table): List<T> =
@@ -29,7 +28,7 @@ internal object QueryService {
 
                 val result = mutableListOf<T>()
 
-                while(set.isAfterLast.not()){
+                while (set.isAfterLast.not()) {
                     val pairs = mutableListOf<Pair<String, Any>>()
                     table.columns.forEach {
                         pairs.add(it.keyValuePair(set))
@@ -41,11 +40,9 @@ internal object QueryService {
                 result
             }
 
-
     fun Column.keyValuePair(set: ResultSet) =
-        when(type){
+        when (type) {
             is SqlType.VarChar,
-            is SqlType.LongText,
             is SqlType.Date -> Pair(this.name, set.getString(this.name))
 
             is SqlType.Integer,
@@ -55,13 +52,12 @@ internal object QueryService {
         }
 
     fun List<Pair<String, Any>>.toJsonString() =
-        joinToString(separator = ","){ (key, value) ->
-            when(value){
-                is String,
+        joinToString(separator = ",") { (key, value) ->
+            when (value) {
+                is String -> "\"$key\":\"$value\""
                 is Int,
-                is Boolean -> "\"$key\":\"$value\""
+                is Boolean -> "\"$key\":$value"
                 else -> throw SQLecusException.CouldNotParseTypeException
             }
         }.let { "{$it}" }
-
 }

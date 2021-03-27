@@ -4,7 +4,7 @@ import models.SqlCall
 import java.sql.Connection
 
 internal object CreateTableUseCase {
-    operator fun invoke(connection: Connection, call: SqlCall.CreateTable){
+    operator fun invoke(connection: Connection, call: SqlCall.CreateTable) {
         val createStatement = "CREATE TABLE IF NOT EXISTS ${call.schema.name}.${call.table.name}"
 
         val columnsStatement =
@@ -14,7 +14,6 @@ internal object CreateTableUseCase {
                 }
 
         val sql = "$createStatement($columnsStatement);"
-
         println(sql).let { connection.prepareCall(sql).execute() }
     }
 }
