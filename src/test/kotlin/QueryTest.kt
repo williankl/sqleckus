@@ -4,8 +4,15 @@ import Call.dropSchema
 import Call.insertItem
 import Query.executeQuery
 import Query.innerJoin
+import Query.where
 import kotlinx.serialization.Serializable
-import models.*
+import models.Column
+import models.Schema
+import models.SqlCall
+import models.SqlOperator
+import models.SqlQuery
+import models.SqlType
+import models.Table
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
@@ -168,6 +175,14 @@ class QueryTest {
                         schema = schema,
                         table = t2,
                         on = typeTwoColumnOne,
+                        condition = SqlOperator.Comparator.Equals,
+                        value = typeOneClass.v1
+                    )
+                )
+                .where(
+                    SqlQuery.Where(
+                        table = t2,
+                        column = typeTwoColumnOne,
                         condition = SqlOperator.Comparator.Equals,
                         value = typeOneClass.v1
                     )

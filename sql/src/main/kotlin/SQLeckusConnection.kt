@@ -6,7 +6,8 @@ import java.sql.DriverManager
 class SQLeckusConnection {
     private var connection: Connection? = null
 
-    fun retrieveConnection() = connection ?: throw SQLecusException.NoDatabaseConnection
+    @PublishedApi
+    internal fun retrieveConnection() = connection ?: throw SQLecusException.NoDatabaseConnection
 
     fun startConnection(url: String) {
         if (connection == null) connection = DriverManager.getConnection(url)

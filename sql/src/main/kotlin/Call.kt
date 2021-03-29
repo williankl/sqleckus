@@ -1,6 +1,10 @@
-import internal.use_cases.call.*
+import internal.use_cases.call.CreateSchemaUseCase
 import internal.use_cases.call.CreateTableUseCase
+import internal.use_cases.call.DeleteItemUseCase
+import internal.use_cases.call.DropSchemaUseCase
+import internal.use_cases.call.DropTableUseCase
 import internal.use_cases.call.InsertItemUseCase
+import internal.use_cases.call.UpdateItemUseCase
 import models.SqlCall
 
 object Call {
