@@ -7,7 +7,13 @@ import Call.dropTable
 import Call.insertItem
 import Call.updateItem
 import kotlinx.serialization.Serializable
-import models.*
+import models.Column
+import models.Schema
+import models.SqlCall
+import models.SqlOperator
+import models.SqlStatement
+import models.SqlType
+import models.Table
 import org.junit.After
 import org.junit.Before
 import org.junit.Test

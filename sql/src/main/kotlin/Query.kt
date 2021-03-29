@@ -3,7 +3,9 @@ import internal.use_cases.query.ExecuteQueryUseCase
 import internal.use_cases.query.InnerJoinUseCase
 import internal.use_cases.query.SelectUseCase
 import internal.use_cases.query.WhereUseCase
-import models.*
+import models.SqlCode
+import models.SqlQuery
+import models.Table
 
 object Query {
     fun select(selection: SqlQuery.Selection) =
