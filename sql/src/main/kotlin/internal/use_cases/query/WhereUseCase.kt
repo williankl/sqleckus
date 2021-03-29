@@ -10,7 +10,7 @@ internal object WhereUseCase {
             "WHERE ${it.table.name}.${it.column.name} ${it.condition.sql} '${it.value}'"
         }
 
-        val sql = "$code $whereStatement"
+        val sql = "${code.sql} $whereStatement"
         return SqlCode.Final(sql)
     }
 }

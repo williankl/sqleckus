@@ -15,10 +15,6 @@ import java.sql.ResultSet
 internal object JsonHelper {
 
     @PublishedApi
-    internal inline fun <reified T> T.retrieveFieldNames() =
-        T::class.members.map { callable -> callable.name }
-
-    @PublishedApi
     internal inline fun <reified T> T.retrieveItemValuePair() =
         Json.encodeToJsonElement(this)
             .jsonObject
