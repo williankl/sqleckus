@@ -13,7 +13,7 @@ internal object CreateTableUseCase {
                     "${it.name} ${it.type.code}"
                 }
 
-        val sql = "$createStatement($columnsStatement);"
+        val sql = "$createStatement ($columnsStatement);"
         println(sql).let { connection.prepareCall(sql).execute() }
     }
 }

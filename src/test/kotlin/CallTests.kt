@@ -1,3 +1,12 @@
+
+import Call.createSchema
+import Call.createTable
+import Call.deleteItem
+import Call.dropSchema
+import Call.dropTable
+import Call.insertItem
+import Call.updateItem
+import kotlinx.serialization.Serializable
 import models.*
 import org.junit.After
 import org.junit.Before
@@ -5,11 +14,12 @@ import org.junit.Test
 
 class CallTests {
 
-    private var sql: SQLeckus? = null
+    private var sql: SQLeckusConnection? = null
 
     private val localUrl =
         "jdbc:postgresql://localhost:5432/test_db?user=postgres&password=1995"
 
+    @Serializable
     data class TestClass(
         val integer: Int,
         val text: String
@@ -52,30 +62,32 @@ class CallTests {
 
     @Before
     fun `before tests`() {
-        sql = SQLeckus()
+        sql = SQLeckusConnection()
         sql?.run {
             startConnection(localUrl)
-            call(SqlCall.DropSchema(schema, forceDrop = true))
-            call(SqlCall.CreateSchema(schema))
+            dropSchema(SqlCall.DropSchema(schema, forceDrop = true))
+            createSchema(SqlCall.CreateSchema(schema))
         }
     }
 
     @After
-    fun `after tests`(){
+    fun `after tests`() {
         sql?.closeConnection()
     }
 
     @Test
     fun `should correctly create table in the database`() {
-        sql?.run { call(SqlCall.CreateTable(schema, table)) }
+        sql?.run {
+            createTable(SqlCall.CreateTable(schema, table))
+        }
     }
 
     @Test
     fun `should correctly insert an item to a table in the database`() {
         sql?.run {
-            call(SqlCall.CreateTable(schema, table))
+            createTable(SqlCall.CreateTable(schema, table))
 
-            call(
+            insertItem(
                 SqlCall.InsertItem(
                     schema = schema,
                     table = table,
@@ -88,34 +100,34 @@ class CallTests {
     @Test
     fun `should correctly drop a table in the database`() {
         sql?.run {
-            call(SqlCall.CreateTable(schema, table))
-            call(SqlCall.DropTable(schema = schema, table = table))
+            createTable(SqlCall.CreateTable(schema, table))
+            dropTable(SqlCall.DropTable(schema = schema, table = table))
         }
     }
 
     @Test
     fun `should drop correctly a table with content in the database`() {
         sql?.run {
-            call(SqlCall.CreateTable(schema, table))
-            call(
+            createTable(SqlCall.CreateTable(schema, table))
+            insertItem(
                 SqlCall.InsertItem(
                     schema = schema,
                     table = table,
                     item = klass
                 )
             )
-            call(SqlCall.DropTable(schema = schema, table = table))
+            dropTable(SqlCall.DropTable(schema = schema, table = table))
         }
     }
 
     @Test
     fun `should correctly delete an item from the database`() {
         sql?.run {
-            call(
+            createTable(
                 SqlCall.CreateTable(schema, table)
             )
 
-            call(
+            insertItem(
                 SqlCall.InsertItem(
                     schema = schema,
                     table = table,
@@ -123,7 +135,7 @@ class CallTests {
                 )
             )
 
-            call(
+            insertItem(
                 SqlCall.InsertItem(
                     schema = schema,
                     table = table,
@@ -131,7 +143,7 @@ class CallTests {
                 )
             )
 
-            call(
+            deleteItem(
                 SqlCall.DeleteItem(
                     schema = schema,
                     table = table,
@@ -148,11 +160,11 @@ class CallTests {
     @Test
     fun `should correctly update an item from the database`() {
         sql?.run {
-            call(
+            createTable(
                 SqlCall.CreateTable(schema, table)
             )
 
-            call(
+            insertItem(
                 SqlCall.InsertItem(
                     schema = schema,
                     table = table,
@@ -160,7 +172,7 @@ class CallTests {
                 )
             )
 
-            call(
+            updateItem(
                 SqlCall.UpdateItem(
                     schema = schema,
                     table = table,

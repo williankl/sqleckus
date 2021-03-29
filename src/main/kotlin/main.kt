@@ -1,5 +1,5 @@
 
 
 fun main() {
-    val sql = SQLeckus()
+    val sql = SQLeckusConnection()
 }

@@ -1,18 +1,19 @@
 package internal.use_cases.call
 
 import errors.SQLecusException
+import internal.JsonHelper.retrieveItemValuePair
 import models.SqlCall
-import retrieveCallableKeyValuePair
 import java.sql.Connection
 
-internal object InsertIntoTableUseCase {
-    operator fun invoke(connection: Connection, call: SqlCall.InsertItem<Any>) {
+@PublishedApi
+internal object InsertItemUseCase {
+    inline operator fun <reified T> invoke(connection: Connection, call: SqlCall.InsertItem<T>) {
         val insertStatement = "INSERT INTO ${call.schema.name}.${call.table.name}"
 
         val columns =
             call.table.columns.joinToString(separator = ", ") { column ->
-                call.item.retrieveCallableKeyValuePair()
-                    .firstOrNull { it?.first == column.name }
+                call.item.retrieveItemValuePair()
+                    .firstOrNull { it.first == column.name }
                     ?.let { it.first }
                     ?: throw SQLecusException.CouldNotFindSqlFieldOnTable(
                         column.name,
@@ -25,8 +26,8 @@ internal object InsertIntoTableUseCase {
 
         val values =
             call.table.columns.joinToString(separator = ", ") { column ->
-                call.item.retrieveCallableKeyValuePair()
-                    .firstOrNull { it?.first == column.name }
+                call.item.retrieveItemValuePair()
+                    .firstOrNull { it.first == column.name }
                     ?.let { "'${it.second}'" }
                     ?: throw SQLecusException.CouldNotFindSqlFieldOnTable(
                         column.name,
