@@ -1,3 +1,4 @@
+import Call.createSchema
 import models.Schema
 import models.SqlCall
 import org.junit.Before
@@ -9,7 +10,7 @@ import java.sql.SQLException
 
 class ConnectionTest {
 
-    private var sql: SQLeckus? = null
+    private var sql: SQLeckusConnection? = null
 
     private val localUrl =
         "jdbc:postgresql://localhost:5432/test_db?user=postgres&password=1995"
@@ -22,7 +23,7 @@ class ConnectionTest {
 
     @Before
     fun `before tests`() {
-        sql = SQLeckus()
+        sql = SQLeckusConnection()
     }
 
     @Test
@@ -34,7 +35,7 @@ class ConnectionTest {
     fun `should make query if connected to a db`() {
         sql?.startConnection(localUrl)
         expectThat(
-            sql?.call(SqlCall.CreateSchema(Schema("name")))
+            sql?.createSchema(SqlCall.CreateSchema(Schema("name")))
         ) isEqualTo Unit
     }
 
@@ -51,7 +52,7 @@ class ConnectionTest {
     @Test
     fun `should throw if no connection is made before attempting a call or query`() {
         expectThrows<SQLException> {
-            sql?.call(SqlCall.CreateSchema(Schema("name")))
+            sql?.createSchema(SqlCall.CreateSchema(Schema("name")))
         }
     }
 }

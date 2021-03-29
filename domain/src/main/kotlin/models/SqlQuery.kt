@@ -2,17 +2,23 @@ package models
 
 sealed class SqlQuery {
     data class Selection(
-        val by: Column,
-        val equals: String,
         val schema: Schema,
-        val table: Table
+        val table: Table,
+        val columns: List<Column>? = null
     ) : SqlQuery()
+
+    data class Where(
+        val table: Table,
+        val column: Column,
+        val condition: SqlOperator,
+        val value: Any
+    )
 
     data class InnerJoin(
         val schema: Schema,
-        val baseTable: Table,
-        val baseCondition: SqlStatement.ConditionStatement,
-        val statements: List<SqlStatement.JoinStatement>,
-        val conditionsWithLogic: List<SqlOperator.Logic>
+        val table: Table,
+        val on: Column,
+        val condition: SqlOperator,
+        val value: Any
     ) : SqlQuery()
 }

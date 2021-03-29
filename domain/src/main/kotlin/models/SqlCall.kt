@@ -14,11 +14,11 @@ sealed class SqlCall {
         val table: Table,
         val changeSet: List<SqlStatement.SetStatement>,
         val condition: SqlStatement.TableConditionStatement
-        ) : SqlCall()
+    ) : SqlCall()
 
     data class DeleteItem(
         val schema: Schema,
         val table: Table,
         val condition: SqlStatement.TableConditionStatement
-        ) : SqlCall()
+    ) : SqlCall()
 }

@@ -1,8 +1,6 @@
 package internal.use_cases.call
 
-import errors.SQLecusException
 import models.SqlCall
-import retrieveCallableKeyValuePair
 import java.sql.Connection
 
 internal object UpdateItemUseCase {

@@ -1,27 +1,15 @@
 import errors.SQLecusException
-import internal.services.CallService
-import internal.services.QueryService
 import models.DatabaseType
-import models.SqlCall
-import models.SqlQuery
-import models.Table
 import java.sql.Connection
 import java.sql.DriverManager
 
-class SQLeckus {
-
+class SQLeckusConnection {
     private var connection: Connection? = null
 
-    fun retrieveConnection() = connection
+    fun retrieveConnection() = connection ?: throw SQLecusException.NoDatabaseConnection
 
     fun startConnection(url: String) {
         if (connection == null) connection = DriverManager.getConnection(url)
-    }
-
-    fun closeConnection(){
-        connection
-            ?.let { it.close() }
-            ?.also { connection = null }
     }
 
     fun startConnection(
@@ -38,15 +26,11 @@ class SQLeckus {
             )
     }
 
-    inline fun <reified T> query(query: SqlQuery, onTable: Table): List<T> =
-        retrieveConnection()?.let { conn ->
-            QueryService.handleQuery(conn, query, onTable)
-        } ?: throw SQLecusException.NoDatabaseConnection
-
-    fun call(call: SqlCall) =
-        retrieveConnection()?.let { conn ->
-            CallService.handleCall(conn, call)
-        } ?: throw SQLecusException.NoDatabaseConnection
+    fun closeConnection() {
+        connection
+            ?.let { it.close() }
+            ?.also { connection = null }
+    }
 
     private fun buildUrl(databaseType: DatabaseType, host: String, port: String, db: String, usr: String, pwd: String) =
         "jdbc:${databaseType.key}://$host:$port/$db?user=$usr&password=$pwd"
