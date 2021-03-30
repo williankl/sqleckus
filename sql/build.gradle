@@ -16,6 +16,9 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.1.0")
 
+    implementation ("org.postgresql:postgresql:9.3-1100-jdbc4")
+    implementation ("mysql:mysql-connector-java:5.1.6")
+
     implementation(project(":domain"))
 }
 
