@@ -1,9 +1,9 @@
 package models
 
 sealed class SqlOperator(val sql: String) {
-    sealed class Logic(sql: String, val condition: SqlStatement.ConditionStatement) : SqlOperator(sql) {
-        class And(condition: SqlStatement.ConditionStatement) : Logic("AND", condition)
-        class Or(condition: SqlStatement.ConditionStatement) : Logic("OR", condition)
+    sealed class Logic(sql: String) : SqlOperator(sql) {
+        object And : Logic("AND")
+        object Or : Logic("OR")
     }
 
     sealed class Comparator(sql: String) : SqlOperator(sql) {

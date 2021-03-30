@@ -2,8 +2,10 @@ import Call.createSchema
 import Call.createTable
 import Call.dropSchema
 import Call.insertItem
+import Query.and
 import Query.executeQuery
 import Query.innerJoin
+import Query.or
 import Query.where
 import kotlinx.serialization.Serializable
 import models.Column
@@ -142,10 +144,8 @@ class QueryTest {
         `insert one item in each`()
         sql?.apply {
             Query.select(
-                SqlQuery.Selection(
                     schema = schema,
                     table = t1
-                )
             )
                 .executeQuery<TypeOne>(this, t1)
         }
@@ -156,27 +156,58 @@ class QueryTest {
         `insert one item in each`()
         sql?.apply {
             Query.select(
-                SqlQuery.Selection(
                     schema = schema,
                     table = t1
-                )
             )
                 .innerJoin(
-                    SqlQuery.InnerJoin(
                         schema = schema,
                         table = t2,
                         on = typeTwoColumnOne,
                         condition = SqlOperator.Comparator.Equals,
                         value = typeOneClass.v1
-                    )
                 )
                 .where(
-                    SqlQuery.Where(
                         table = t2,
                         column = typeTwoColumnOne,
                         condition = SqlOperator.Comparator.Equals,
                         value = typeOneClass.v1
-                    )
+                )
+                .executeQuery<TypeOne>(this, t1)
+        }
+    }
+
+    @Test
+    fun `should retrieve item with where using logic operators`() {
+        `insert one item in each`()
+        sql?.apply {
+            Query.select(
+                schema = schema,
+                table = t1
+            )
+                .innerJoin(
+                    schema = schema,
+                    table = t2,
+                    on = typeTwoColumnOne,
+                    condition = SqlOperator.Comparator.Equals,
+                    value = typeOneClass.v1
+                )
+                .where(
+                    table = t2,
+                    column = typeTwoColumnOne,
+                    condition = SqlOperator.Comparator.Equals,
+                    value = typeOneClass.v1
+                )
+                .or(
+                    table = t2,
+                    column = typeTwoColumnOne,
+                    condition = SqlOperator.Comparator.Equals,
+                    value = typeOneClass.v1
+                )
+                .and(
+                    table = t2,
+                    column = typeTwoColumnOne,
+                    condition = SqlOperator.Comparator.Equals,
+                    value = typeOneClass.v1
                 )
                 .executeQuery<TypeOne>(this, t1)
         }
