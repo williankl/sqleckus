@@ -25,6 +25,15 @@ object Query {
         value: Any
     ) = InnerJoinUseCase(this, schema, table, on, condition, value)
 
+    fun SqlCode.Executable.innerJoin(
+        schema: Schema,
+        table: Table,
+        on: Column,
+        condition: SqlOperator,
+        to: Column,
+        overrideLastTable: Boolean = false
+    ) = InnerJoinUseCase(this, schema, table, on, condition, lastJoined, to, overrideLastTable)
+
     fun SqlCode.where(
         table: Table,
         column: Column,

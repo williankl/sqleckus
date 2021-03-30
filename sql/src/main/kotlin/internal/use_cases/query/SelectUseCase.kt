@@ -20,6 +20,6 @@ internal object SelectUseCase {
 
         val sql = "SELECT $targetSelection FROM ${schema.name}.${table.name}"
 
-        return SqlCode.Executable(sql)
+        return SqlCode.Executable(sql, table)
     }
 }

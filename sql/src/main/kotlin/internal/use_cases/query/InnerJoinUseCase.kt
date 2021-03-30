@@ -23,6 +23,30 @@ internal object InnerJoinUseCase {
 
         val sql = "$innerJoinStatement $onStatement"
 
-        return SqlCode.Executable("${code.sql} $sql")
+        return SqlCode.Executable("${code.sql} $sql", table)
+    }
+
+    operator fun invoke(
+        code: SqlCode,
+        schema: Schema,
+        table: Table,
+        on: Column,
+        condition: SqlOperator,
+        joiningTable: Table,
+        to: Column,
+        overrideLastTable: Boolean
+    ): SqlCode.Executable {
+        val innerJoinStatement =
+            "INNER JOIN ${schema.name}.${table.name}"
+        val onStatement =
+            "ON ${table.name}.${on.name} ${condition.sql} ${joiningTable.name}.${to.name}"
+
+        val sql = "$innerJoinStatement $onStatement"
+
+        val result =
+            if (overrideLastTable) SqlCode.Executable("${code.sql} $sql", table)
+            else SqlCode.Executable("${code.sql} $sql", joiningTable)
+
+        return result
     }
 }
