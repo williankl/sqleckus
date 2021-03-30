@@ -8,7 +8,6 @@ import Query.where
 import kotlinx.serialization.Serializable
 import models.Column
 import models.Schema
-import models.SqlCall
 import models.SqlOperator
 import models.SqlQuery
 import models.SqlType
@@ -97,8 +96,8 @@ class QueryTest {
         sql = SQLeckusConnection()
         sql?.run {
             startConnection(localUrl)
-            dropSchema(SqlCall.DropSchema(schema, forceDrop = true))
-            createSchema(SqlCall.CreateSchema(schema))
+            dropSchema(schema, forceDrop = true)
+            createSchema(schema)
         }
     }
 
@@ -109,39 +108,31 @@ class QueryTest {
 
     private fun `insert one item in each`() {
         sql?.apply {
-            createTable(SqlCall.CreateTable(schema, t1))
-            createTable(SqlCall.CreateTable(schema, t2))
+            createTable(schema, t1)
+            createTable(schema, t2)
 
             insertItem(
-                SqlCall.InsertItem(
-                    schema = schema,
-                    table = t1,
-                    item = typeOneClass
-                )
+                schema = schema,
+                table = t1,
+                item = typeOneClass
             )
 
             insertItem(
-                SqlCall.InsertItem(
-                    schema = schema,
-                    table = t2,
-                    item = typeTwoClass
-                )
+                schema = schema,
+                table = t2,
+                item = typeTwoClass
             )
 
             insertItem(
-                SqlCall.InsertItem(
-                    schema = schema,
-                    table = t2,
-                    item = typeTwoClass.copy(v2 = 5)
-                )
+                schema = schema,
+                table = t2,
+                item = typeTwoClass.copy(v2 = 5)
             )
 
             insertItem(
-                SqlCall.InsertItem(
-                    schema = schema,
-                    table = t2,
-                    item = typeTwoClass.copy(v1 = 6)
-                )
+                schema = schema,
+                table = t2,
+                item = typeTwoClass.copy(v1 = 6)
             )
         }
     }

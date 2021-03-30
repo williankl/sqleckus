@@ -9,7 +9,6 @@ import Call.updateItem
 import kotlinx.serialization.Serializable
 import models.Column
 import models.Schema
-import models.SqlCall
 import models.SqlOperator
 import models.SqlStatement
 import models.SqlType
@@ -71,8 +70,8 @@ class CallTests {
         sql = SQLeckusConnection()
         sql?.run {
             startConnection(localUrl)
-            dropSchema(SqlCall.DropSchema(schema, forceDrop = true))
-            createSchema(SqlCall.CreateSchema(schema))
+            dropSchema(schema, forceDrop = true)
+            createSchema(schema)
         }
     }
 
@@ -84,21 +83,19 @@ class CallTests {
     @Test
     fun `should correctly create table in the database`() {
         sql?.run {
-            createTable(SqlCall.CreateTable(schema, table))
+            createTable(schema, table)
         }
     }
 
     @Test
     fun `should correctly insert an item to a table in the database`() {
         sql?.run {
-            createTable(SqlCall.CreateTable(schema, table))
+            createTable(schema, table)
 
             insertItem(
-                SqlCall.InsertItem(
-                    schema = schema,
-                    table = table,
-                    item = klass
-                )
+                schema = schema,
+                table = table,
+                item = klass
             )
         }
     }
@@ -106,58 +103,48 @@ class CallTests {
     @Test
     fun `should correctly drop a table in the database`() {
         sql?.run {
-            createTable(SqlCall.CreateTable(schema, table))
-            dropTable(SqlCall.DropTable(schema = schema, table = table))
+            createTable(schema, table)
+            dropTable(schema = schema, table = table)
         }
     }
 
     @Test
     fun `should drop correctly a table with content in the database`() {
         sql?.run {
-            createTable(SqlCall.CreateTable(schema, table))
+            createTable(schema, table)
             insertItem(
-                SqlCall.InsertItem(
-                    schema = schema,
-                    table = table,
-                    item = klass
-                )
+                schema = schema,
+                table = table,
+                item = klass
             )
-            dropTable(SqlCall.DropTable(schema = schema, table = table))
+            dropTable(schema = schema, table = table)
         }
     }
 
     @Test
     fun `should correctly delete an item from the database`() {
         sql?.run {
-            createTable(
-                SqlCall.CreateTable(schema, table)
+            createTable(schema, table)
+
+            insertItem(
+                schema = schema,
+                table = table,
+                item = klass
             )
 
             insertItem(
-                SqlCall.InsertItem(
-                    schema = schema,
-                    table = table,
-                    item = klass
-                )
-            )
-
-            insertItem(
-                SqlCall.InsertItem(
-                    schema = schema,
-                    table = table,
-                    item = secondKlass
-                )
+                schema = schema,
+                table = table,
+                item = secondKlass
             )
 
             deleteItem(
-                SqlCall.DeleteItem(
-                    schema = schema,
-                    table = table,
-                    condition = SqlStatement.TableConditionStatement(
-                        column = testColumnOne,
-                        operator = SqlOperator.Comparator.Equals,
-                        value = 5
-                    )
+                schema = schema,
+                table = table,
+                condition = SqlStatement.TableConditionStatement(
+                    column = testColumnOne,
+                    operator = SqlOperator.Comparator.Equals,
+                    value = 5
                 )
             )
         }
@@ -166,33 +153,27 @@ class CallTests {
     @Test
     fun `should correctly update an item from the database`() {
         sql?.run {
-            createTable(
-                SqlCall.CreateTable(schema, table)
-            )
+            createTable(schema, table)
 
             insertItem(
-                SqlCall.InsertItem(
-                    schema = schema,
-                    table = table,
-                    item = klass
-                )
+                schema = schema,
+                table = table,
+                item = klass
             )
 
             updateItem(
-                SqlCall.UpdateItem(
-                    schema = schema,
-                    table = table,
-                    changeSet = listOf(
-                        SqlStatement.SetStatement(
-                            column = testColumnOne,
-                            toValue = 7
-                        )
-                    ),
-                    condition = SqlStatement.TableConditionStatement(
+                schema = schema,
+                table = table,
+                changeSet = listOf(
+                    SqlStatement.SetStatement(
                         column = testColumnOne,
-                        operator = SqlOperator.Comparator.Equals,
-                        value = 5
+                        toValue = 7
                     )
+                ),
+                condition = SqlStatement.TableConditionStatement(
+                    column = testColumnOne,
+                    operator = SqlOperator.Comparator.Equals,
+                    value = 5
                 )
             )
         }

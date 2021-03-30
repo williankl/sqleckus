@@ -5,27 +5,45 @@ import internal.use_cases.call.DropSchemaUseCase
 import internal.use_cases.call.DropTableUseCase
 import internal.use_cases.call.InsertItemUseCase
 import internal.use_cases.call.UpdateItemUseCase
-import models.SqlCall
+import models.Schema
+import models.SqlStatement
+import models.Table
 
 object Call {
-    fun SQLeckusConnection.createSchema(call: SqlCall.CreateSchema) =
-        CreateSchemaUseCase(this.retrieveConnection(), call)
+    fun SQLeckusConnection.createSchema(schema: Schema) =
+        CreateSchemaUseCase(this.retrieveConnection(), schema)
 
-    fun SQLeckusConnection.dropSchema(call: SqlCall.DropSchema) =
-        DropSchemaUseCase(this.retrieveConnection(), call)
+    fun SQLeckusConnection.dropSchema(
+        schema: Schema,
+        forceDrop: Boolean = false
+    ) = DropSchemaUseCase(this.retrieveConnection(), schema, forceDrop)
 
-    fun SQLeckusConnection.createTable(call: SqlCall.CreateTable) =
-        CreateTableUseCase(this.retrieveConnection(), call)
+    fun SQLeckusConnection.createTable(
+        schema: Schema,
+        table: Table
+    ) = CreateTableUseCase(this.retrieveConnection(), schema, table)
 
-    fun SQLeckusConnection.dropTable(call: SqlCall.DropTable) =
-        DropTableUseCase(this.retrieveConnection(), call)
+    fun SQLeckusConnection.dropTable(
+        schema: Schema,
+        table: Table
+    ) = DropTableUseCase(this.retrieveConnection(), schema, table)
 
-    inline fun <reified T> SQLeckusConnection.insertItem(call: SqlCall.InsertItem<T>) =
-        InsertItemUseCase(this.retrieveConnection(), call)
+    inline fun <reified T> SQLeckusConnection.insertItem(
+        schema: Schema,
+        table: Table,
+        item: T
+    ) = InsertItemUseCase(this.retrieveConnection(), schema, table, item)
 
-    fun SQLeckusConnection.deleteItem(call: SqlCall.DeleteItem) =
-        DeleteItemUseCase(this.retrieveConnection(), call)
+    fun SQLeckusConnection.deleteItem(
+        schema: Schema,
+        table: Table,
+        condition: SqlStatement.TableConditionStatement
+    ) = DeleteItemUseCase(this.retrieveConnection(), schema, table, condition)
 
-    fun SQLeckusConnection.updateItem(call: SqlCall.UpdateItem) =
-        UpdateItemUseCase(this.retrieveConnection(), call)
+    fun SQLeckusConnection.updateItem(
+        schema: Schema,
+        table: Table,
+        changeSet: List<SqlStatement.SetStatement>,
+        condition: SqlStatement.TableConditionStatement
+    ) = UpdateItemUseCase(this.retrieveConnection(), schema, table, changeSet, condition)
 }
