@@ -1,6 +1,5 @@
 import Call.createSchema
 import models.Schema
-import models.SqlCall
 import org.junit.Before
 import org.junit.Test
 import strikt.api.expectThat
@@ -35,7 +34,7 @@ class ConnectionTest {
     fun `should make query if connected to a db`() {
         sql?.startConnection(localUrl)
         expectThat(
-            sql?.createSchema(SqlCall.CreateSchema(Schema("name")))
+            sql?.createSchema(Schema("name"))
         ) isEqualTo Unit
     }
 
@@ -52,7 +51,7 @@ class ConnectionTest {
     @Test
     fun `should throw if no connection is made before attempting a call or query`() {
         expectThrows<SQLException> {
-            sql?.createSchema(SqlCall.CreateSchema(Schema("name")))
+            sql?.createSchema(Schema("name"))
         }
     }
 }

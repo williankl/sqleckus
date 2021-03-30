@@ -1,20 +1,28 @@
 package internal.use_cases.call
 
-import models.SqlCall
+import models.Schema
+import models.SqlStatement
+import models.Table
 import java.sql.Connection
 
 internal object UpdateItemUseCase {
-    operator fun invoke(connection: Connection, call: SqlCall.UpdateItem) {
+    operator fun invoke(
+        connection: Connection,
+        schema: Schema,
+        table: Table,
+        changeSet: List<SqlStatement.SetStatement>,
+        condition: SqlStatement.TableConditionStatement
+    ) {
         val updateStatement =
-            "UPDATE ${call.schema.name}.${call.table.name}"
+            "UPDATE ${schema.name}.${table.name}"
 
         val setStatement =
-            call.changeSet.joinToString(separator = ", ") { set ->
+            changeSet.joinToString(separator = ", ") { set ->
                 "${set.column.name} = ${set.toValue}"
             }.let { "SET $it" }
 
         val whereStatement =
-            call.condition.let {
+            condition.let {
                 "${it.column.name} ${it.operator.sql} ${it.value}"
             }.let { "WHERE $it" }
 

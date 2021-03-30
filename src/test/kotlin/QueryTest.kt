@@ -2,15 +2,15 @@ import Call.createSchema
 import Call.createTable
 import Call.dropSchema
 import Call.insertItem
+import Query.and
 import Query.executeQuery
 import Query.innerJoin
+import Query.or
 import Query.where
 import kotlinx.serialization.Serializable
 import models.Column
 import models.Schema
-import models.SqlCall
 import models.SqlOperator
-import models.SqlQuery
 import models.SqlType
 import models.Table
 import org.junit.After
@@ -97,8 +97,8 @@ class QueryTest {
         sql = SQLeckusConnection()
         sql?.run {
             startConnection(localUrl)
-            dropSchema(SqlCall.DropSchema(schema, forceDrop = true))
-            createSchema(SqlCall.CreateSchema(schema))
+            dropSchema(schema, forceDrop = true)
+            createSchema(schema)
         }
     }
 
@@ -109,39 +109,31 @@ class QueryTest {
 
     private fun `insert one item in each`() {
         sql?.apply {
-            createTable(SqlCall.CreateTable(schema, t1))
-            createTable(SqlCall.CreateTable(schema, t2))
+            createTable(schema, t1)
+            createTable(schema, t2)
 
             insertItem(
-                SqlCall.InsertItem(
-                    schema = schema,
-                    table = t1,
-                    item = typeOneClass
-                )
+                schema = schema,
+                table = t1,
+                item = typeOneClass
             )
 
             insertItem(
-                SqlCall.InsertItem(
-                    schema = schema,
-                    table = t2,
-                    item = typeTwoClass
-                )
+                schema = schema,
+                table = t2,
+                item = typeTwoClass
             )
 
             insertItem(
-                SqlCall.InsertItem(
-                    schema = schema,
-                    table = t2,
-                    item = typeTwoClass.copy(v2 = 5)
-                )
+                schema = schema,
+                table = t2,
+                item = typeTwoClass.copy(v2 = 5)
             )
 
             insertItem(
-                SqlCall.InsertItem(
-                    schema = schema,
-                    table = t2,
-                    item = typeTwoClass.copy(v1 = 6)
-                )
+                schema = schema,
+                table = t2,
+                item = typeTwoClass.copy(v1 = 6)
             )
         }
     }
@@ -151,10 +143,8 @@ class QueryTest {
         `insert one item in each`()
         sql?.apply {
             Query.select(
-                SqlQuery.Selection(
-                    schema = schema,
-                    table = t1
-                )
+                schema = schema,
+                table = t1
             )
                 .executeQuery<TypeOne>(this, t1)
         }
@@ -165,27 +155,58 @@ class QueryTest {
         `insert one item in each`()
         sql?.apply {
             Query.select(
-                SqlQuery.Selection(
-                    schema = schema,
-                    table = t1
-                )
+                schema = schema,
+                table = t1
             )
                 .innerJoin(
-                    SqlQuery.InnerJoin(
-                        schema = schema,
-                        table = t2,
-                        on = typeTwoColumnOne,
-                        condition = SqlOperator.Comparator.Equals,
-                        value = typeOneClass.v1
-                    )
+                    schema = schema,
+                    table = t2,
+                    on = typeTwoColumnOne,
+                    condition = SqlOperator.Comparator.Equals,
+                    value = typeOneClass.v1
                 )
                 .where(
-                    SqlQuery.Where(
-                        table = t2,
-                        column = typeTwoColumnOne,
-                        condition = SqlOperator.Comparator.Equals,
-                        value = typeOneClass.v1
-                    )
+                    table = t2,
+                    column = typeTwoColumnOne,
+                    condition = SqlOperator.Comparator.Equals,
+                    value = typeOneClass.v1
+                )
+                .executeQuery<TypeOne>(this, t1)
+        }
+    }
+
+    @Test
+    fun `should retrieve item with where using logic operators`() {
+        `insert one item in each`()
+        sql?.apply {
+            Query.select(
+                schema = schema,
+                table = t1
+            )
+                .innerJoin(
+                    schema = schema,
+                    table = t2,
+                    on = typeTwoColumnOne,
+                    condition = SqlOperator.Comparator.Equals,
+                    value = typeOneClass.v1
+                )
+                .where(
+                    table = t2,
+                    column = typeTwoColumnOne,
+                    condition = SqlOperator.Comparator.Equals,
+                    value = typeOneClass.v1
+                )
+                .or(
+                    table = t2,
+                    column = typeTwoColumnOne,
+                    condition = SqlOperator.Comparator.Equals,
+                    value = typeOneClass.v1
+                )
+                .and(
+                    table = t2,
+                    column = typeTwoColumnOne,
+                    condition = SqlOperator.Comparator.Equals,
+                    value = typeOneClass.v1
                 )
                 .executeQuery<TypeOne>(this, t1)
         }

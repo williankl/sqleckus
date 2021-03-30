@@ -1,15 +1,25 @@
 package internal.use_cases.query
 
+import models.Column
+import models.Schema
 import models.SqlCode
-import models.SqlQuery
+import models.SqlOperator
+import models.Table
 
 @PublishedApi
 internal object InnerJoinUseCase {
-    operator fun invoke(code: SqlCode, query: SqlQuery.InnerJoin): SqlCode.Executable {
+    operator fun invoke(
+        code: SqlCode,
+        schema: Schema,
+        table: Table,
+        on: Column,
+        condition: SqlOperator,
+        value: Any
+    ): SqlCode.Executable {
         val innerJoinStatement =
-            "INNER JOIN ${query.schema.name}.${query.table.name}"
+            "INNER JOIN ${schema.name}.${table.name}"
         val onStatement =
-            "ON ${query.table.name}.${query.on.name} ${query.condition.sql} ${query.value}"
+            "ON ${table.name}.${on.name} ${condition.sql} $value"
 
         val sql = "$innerJoinStatement $onStatement"
 

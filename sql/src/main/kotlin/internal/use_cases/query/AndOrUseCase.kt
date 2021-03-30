@@ -6,17 +6,18 @@ import models.SqlOperator
 import models.Table
 
 @PublishedApi
-internal object WhereUseCase {
+internal object AndOrUseCase {
     operator fun invoke(
         code: SqlCode,
+        logicOperator: SqlOperator.Logic,
         table: Table,
         column: Column,
         condition: SqlOperator,
         value: Any
     ): SqlCode.TerminalLogic {
-        val whereStatement = "WHERE ${table.name}.${column.name} ${condition.sql} '$value'"
+        val andOrUseCase = "${logicOperator.sql} ${table.name}.${column.name} ${condition.sql} $value"
 
-        val sql = "${code.sql} $whereStatement"
+        val sql = "${code.sql} $andOrUseCase"
         return SqlCode.TerminalLogic(sql)
     }
 }
