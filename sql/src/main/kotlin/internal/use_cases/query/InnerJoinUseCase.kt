@@ -4,7 +4,6 @@ import models.Column
 import models.Schema
 import models.SqlCode
 import models.SqlOperator
-import models.SqlQuery
 import models.Table
 
 @PublishedApi

@@ -11,7 +11,6 @@ import kotlinx.serialization.Serializable
 import models.Column
 import models.Schema
 import models.SqlOperator
-import models.SqlQuery
 import models.SqlType
 import models.Table
 import org.junit.After
@@ -144,8 +143,8 @@ class QueryTest {
         `insert one item in each`()
         sql?.apply {
             Query.select(
-                    schema = schema,
-                    table = t1
+                schema = schema,
+                table = t1
             )
                 .executeQuery<TypeOne>(this, t1)
         }
@@ -156,21 +155,21 @@ class QueryTest {
         `insert one item in each`()
         sql?.apply {
             Query.select(
-                    schema = schema,
-                    table = t1
+                schema = schema,
+                table = t1
             )
                 .innerJoin(
-                        schema = schema,
-                        table = t2,
-                        on = typeTwoColumnOne,
-                        condition = SqlOperator.Comparator.Equals,
-                        value = typeOneClass.v1
+                    schema = schema,
+                    table = t2,
+                    on = typeTwoColumnOne,
+                    condition = SqlOperator.Comparator.Equals,
+                    value = typeOneClass.v1
                 )
                 .where(
-                        table = t2,
-                        column = typeTwoColumnOne,
-                        condition = SqlOperator.Comparator.Equals,
-                        value = typeOneClass.v1
+                    table = t2,
+                    column = typeTwoColumnOne,
+                    condition = SqlOperator.Comparator.Equals,
+                    value = typeOneClass.v1
                 )
                 .executeQuery<TypeOne>(this, t1)
         }
