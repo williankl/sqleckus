@@ -166,6 +166,7 @@ class QueryTest {
                     value = typeOneClass.v1
                 )
                 .where(
+                    schema = schema,
                     table = t2,
                     column = typeTwoColumnOne,
                     condition = SqlOperator.Comparator.Equals,
@@ -191,18 +192,23 @@ class QueryTest {
                     value = typeOneClass.v1
                 )
                 .where(
+                    schema = schema,
                     table = t2,
                     column = typeTwoColumnOne,
                     condition = SqlOperator.Comparator.Equals,
-                    value = typeOneClass.v1
+                    toSchema = schema,
+                    toTable = t1,
+                    toColumn = typeOneColumnOne
                 )
                 .or(
+                    schema = schema,
                     table = t2,
                     column = typeTwoColumnOne,
                     condition = SqlOperator.Comparator.Equals,
                     value = typeOneClass.v1
                 )
                 .and(
+                    schema = schema,
                     table = t2,
                     column = typeTwoColumnOne,
                     condition = SqlOperator.Comparator.Equals,

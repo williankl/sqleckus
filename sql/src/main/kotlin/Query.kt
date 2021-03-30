@@ -30,30 +30,64 @@ object Query {
         table: Table,
         on: Column,
         condition: SqlOperator,
-        to: Column,
-        overrideLastTable: Boolean = false
-    ) = InnerJoinUseCase(this, schema, table, on, condition, lastJoined, to, overrideLastTable)
+        toSchema: Schema,
+        toTable: Table,
+        toColumn: Column
+    ) = InnerJoinUseCase(this, schema, table, on, condition, toSchema, toTable, toColumn)
 
     fun SqlCode.where(
+        schema: Schema,
         table: Table,
         column: Column,
         condition: SqlOperator,
         value: Any
-    ) = WhereUseCase(this, table, column, condition, value)
+    ) = WhereUseCase(this, schema, table, column, condition, value)
+
+    fun SqlCode.where(
+        schema: Schema,
+        table: Table,
+        column: Column,
+        condition: SqlOperator,
+        toSchema: Schema,
+        toTable: Table,
+        toColumn: Column
+    ) = WhereUseCase(this, schema, table, column, condition, toSchema, toTable, toColumn)
 
     fun SqlCode.TerminalLogic.and(
+        schema: Schema,
         table: Table,
         column: Column,
         condition: SqlOperator,
         value: Any
-    ) = AndOrUseCase(this, SqlOperator.Logic.And, table, column, condition, value)
+    ) = AndOrUseCase(this, SqlOperator.Logic.And, schema, table, column, condition, value)
+
+    fun SqlCode.TerminalLogic.and(
+        schema: Schema,
+        table: Table,
+        column: Column,
+        condition: SqlOperator,
+        toSchema: Schema,
+        toTable: Table,
+        toColumn: Column
+    ) = AndOrUseCase(this, SqlOperator.Logic.And, schema, table, column, condition, toSchema, toTable, toColumn)
 
     fun SqlCode.TerminalLogic.or(
+        schema: Schema,
         table: Table,
         column: Column,
         condition: SqlOperator,
         value: Any
-    ) = AndOrUseCase(this, SqlOperator.Logic.Or, table, column, condition, value)
+    ) = AndOrUseCase(this, SqlOperator.Logic.Or, schema, table, column, condition, value)
+
+    fun SqlCode.TerminalLogic.or(
+        schema: Schema,
+        table: Table,
+        column: Column,
+        condition: SqlOperator,
+        toSchema: Schema,
+        toTable: Table,
+        toColumn: Column
+    ) = AndOrUseCase(this, SqlOperator.Logic.Or, schema, table, column, condition, toSchema, toTable, toColumn)
 
     inline fun <reified T> SqlCode.Executable.executeQuery(connection: SQLeckusConnection, mapWith: Table) =
         JsonHelper.parseResult<T>(ExecuteQueryUseCase(this, connection.retrieveConnection()), mapWith)
