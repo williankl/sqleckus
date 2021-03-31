@@ -1,6 +1,7 @@
 package internal.use_cases.call
 
 import models.Schema
+import models.SqlType
 import models.Table
 import java.sql.Connection
 
@@ -10,8 +11,16 @@ internal object CreateTableUseCase {
 
         val columnsStatement =
             table.columns
-                .joinToString(separator = " , ") {
-                    "${it.name} ${it.type.code}"
+                .joinToString(separator = " , ") { column ->
+                    val isPrimaryKey =
+                        if (column.type is SqlType.UniqueCandidate)
+                            (column.type as SqlType.UniqueCandidate).isPrimaryKey
+                        else false
+
+                    "${column.name} ${column.type.code}".let {
+                        if (isPrimaryKey) "$it PRIMARY KEY"
+                        else it
+                    }
                 }
 
         val sql = "$createStatement ($columnsStatement);"

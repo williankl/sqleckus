@@ -56,7 +56,7 @@ class QueryTest {
     private val typeOneColumnTwo =
         Column(
             name = "v2",
-            type = SqlType.VarChar(50)
+            type = SqlType.UniqueCandidate.VarChar(50)
         )
 
     private val typeTwoColumnOne =
@@ -68,7 +68,7 @@ class QueryTest {
     private val typeTwoColumnTwo =
         Column(
             name = "v2",
-            type = SqlType.Integer
+            type = SqlType.UniqueCandidate.Integer()
         )
 
     private val t1 =

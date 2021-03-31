@@ -51,7 +51,7 @@ class CallTests {
     private val testColumnTwo =
         Column(
             name = "text",
-            type = SqlType.VarChar(50)
+            type = SqlType.UniqueCandidate.VarChar(50)
         )
 
     private val table =
