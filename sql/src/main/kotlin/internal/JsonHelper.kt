@@ -45,12 +45,14 @@ internal object JsonHelper {
     internal fun Column.keyValuePair(set: ResultSet) =
         when (type) {
             is SqlType.UniqueCandidate.VarChar,
-            is SqlType.Date -> Pair(this.name, set.getString(this.name))
+            is SqlType.Date -> name to set.getString(name)
 
             is SqlType.UniqueCandidate.Integer,
-            is SqlType.BigInt -> Pair(this.name, set.getInt(this.name))
+            is SqlType.BigInt -> name to set.getInt(name)
 
-            is SqlType.Binary -> Pair(this.name, set.getBoolean(this.name))
+            is SqlType.Binary -> name to set.getBoolean(name)
+
+            is SqlType.Float -> name to set.getFloat(name)
         }
 
     @PublishedApi
